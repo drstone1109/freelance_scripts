@@ -1,0 +1,39 @@
+Problem 1 — How to Change Website and What Data to Extract
+The script has two things you change for every client:
+Change the URL:
+python# Current
+url = "http://quotes.toscrape.com"
+
+# Change to whatever site client needs
+url = "https://books.toscrape.com"
+Change what data to extract — this is the part that changes every time. Every website has different HTML structure. Here's how you find what to grab:
+
+Open the target website in Chrome
+Right click on the data you want → Inspect
+You'll see the HTML — look for the tag and class name wrapping that data
+Update these lines in your script:
+
+python# Current — finds divs with class "quote"
+quote_blocks = soup.find_all('div', class_='quote')
+
+# Example for a different site — finds all product cards
+items = soup.find_all('article', class_='product_pod')
+
+# Then extract specific fields from each item
+for item in items:
+    title = item.find('h3').find('a')['title']
+    price = item.find('p', class_='price_color').get_text()
+The logic is always the same — find the container, then find the fields inside it. Only the tag names and class names change per website.
+
+Problem 2 — Save CSV to a Specific Folder
+Change the output path in the last line of your script:
+python# Current — saves in VS Code working folder
+scrape_quotes(url, "quotes_output.csv")
+
+# Change to any folder you want
+scrape_quotes(url, r"C:\Users\akshi\Desktop\scraped_data.csv")
+
+# Or make it ask the user every time
+output_path = input("Enter full path where you want to save the CSV: ")
+scrape_quotes(url, output_path)
+The r before the string is important on Windows — it stops the backslashes from causing errors.
